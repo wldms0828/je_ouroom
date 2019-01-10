@@ -65,7 +65,7 @@ jieun.detail2={
 			let je_div_cover_info2 = $('<div style="height:100%"/>').addClass('je_div_cover_info2');
 			let arr = ['a','b','c'];
 			$.each(arr,function(i,j){
-				let col = $('<div>').addClass('je_col'+i).appendTo(section).appendTo($('#content'));
+				var col = $('<div>').addClass('je_col'+i).appendTo(section).appendTo($('#content'));
 				col.appendTo(section);
 				$('.je_col0').append(je_div_cover);
 				$('.je_col1').append(je_div_cover_info1);					
@@ -125,15 +125,14 @@ jieun.detail2={
 	    	$('<select id="je_selectbtn" name="je_opt" />').appendTo(je_div_cover_info1);
 	    	$('<option selected disabled hidden />').attr({"value":""}).html('옵션').appendTo($('#je_selectbtn'));
 	    	$.each(d.options,(i,j)=>{
-				$('<option id="opt"/>').attr("value",j.seq).html(j.options).appendTo($('#je_selectbtn'));
+				$('<option id="opt'+i+'"/>').attr("value",j.seq).html(j.options).appendTo($('#je_selectbtn'));
 			});	
 	    	$('<div id="je_total_div"/>').appendTo(section2);
 			$('<div id="je_total_1" class="col-md-8" style="text-align: center;"/>').appendTo($('#je_total_div'));
 			$('<div id="je_total_2" class="col-md-4" style="margin-top: 50px; height:7500px; padding-left: 50px; padding-right: 50px;"/>').appendTo($('#je_total_div'));
-			//jieun.detail2.a(x);
 			
 	    	
-	    	var je_item=$('<section class="je_item" id="item_sec" style="overflow:auto; margin-top:3%; max-height:20%"/>');
+	    	var je_item=$('<section class="je_item" id="item_sec" style="overflow:auto; margin-top:3%; max-height:20%; background-color:whitesmoke; "/>');
 	    	je_item.appendTo(je_div_cover_info1);
 	    	
 	    	$('<hr style="	color: gray; size: 0.5em; noshade;"/>').appendTo(je_div_cover_info2);
@@ -153,9 +152,9 @@ jieun.detail2={
 			$('<select id="select_btn2" name="je_opt" style="font-size: 12px; width: 120%; height: 3%;"/>').appendTo(btn_span);
 			btn_span.appendTo(t_order_cart);
 			$('<option selected disabled hidden />').attr({"value":""}).html('옵션').appendTo($('#select_btn2'));
-	    	$.each(d.options,(i,j)=>{
-				$('<option id="opt1"/>').attr("value",j.seq).html(j.options).appendTo($('#select_btn2'));
-			});	
+			/*$.each(d.options,(i,j)=>{
+				$('<option id="opt'+i+'"/>').attr("value",j.seq).html(j.options).appendTo($('#select_btn2'));
+			});	*/
 			je_order_cart.appendTo(t_order_cart);
 			
 			
@@ -177,7 +176,8 @@ jieun.detail2={
 				let minus=$('<span id="je_minus'+t2+ '" class="minus glyphicon glyphicon-minus" role="button" style="margin-right: 3px;"/>');
 				let amount=$('<div class="amount"/>');
 				let plus=$('<span id="je_plus'+t2+ '" class="plus glyphicon glyphicon-plus" role="button" style="margin-left: 10px;"/>');
-				let input=$('<input id="je_num_val'+t2+'" type="number" value="1"  style=" border: 0px solid; width:30px; text-align:center;"/>');
+				let input=$('<input id="je_num_val'+t2+'" type="number" value="1"  style=" border: 0px solid; width:30px; text-align:center; background-color:whitesmoke; " disabled/>');
+				$('<input/>').attr({type:'hidden',id:"je_num_val_"+t2}).val($('#je_selectbtn option:selected').val()).appendTo(amount);
 				let divv=$('<div id="item'+t2+'" class="divv_c" data-index="1" style="border-bottom: solid 1px #ededed; margin:10px; font-size: 12px;">');
 				let detail=$('<div class="detail" style="margin-top:20px">');
 				let bold_p=$('<p class="bold col-md-12" style="font-weight:bold; left: 80%; width: 20%;  bottom: 20px; padding-right: 0px;">');
@@ -192,9 +192,18 @@ jieun.detail2={
 				let res = true;
 				for(let i =1; i<=t; i++){
 					if($.cookie("opt"+i)===$("#je_selectbtn option:selected").val()){
-						alert('이미 선택한 옵션입니다.');
+						console.log('$.cookie("opt"+i)'+$.cookie("opt"+i));
+						console.log("option:"+$("#je_selectbtn option:selected").val());
+						alert('이미 선택된 옵션입니다.');
 						res= false; 
-					}
+					}				
+/*					if($('#opt'+i).val()===$("#je_selectbtn option:selected").val()){
+						res= false;
+						console.log("$('#opt'+i).val()"+$('#opt'+i).val());
+						console.log("option:"+$("#je_selectbtn option:selected").val());
+						
+						alert('이미 선택된 옵션입니다.');
+					}*/
 				}
 				if(res){
 					
@@ -217,8 +226,10 @@ jieun.detail2={
 					divv.append(br);
 					sum=sum+y;
 					$('#je_won').html((sum+"").replace(/\B(?=(\d{3})+(?!\d))/g, ','));	
+					
+					
 				}
-				
+
 			
 				$(this).click(e=>{
 					e.preventDefault();		
@@ -250,9 +261,6 @@ jieun.detail2={
 						
 				});
 		
-				
-				$('#je_won').html(sum);	
-
 				remove.click(e=>{
 					e.preventDefault();				
 					divv.remove();		
@@ -265,17 +273,19 @@ jieun.detail2={
 						}
 					
 					});
-				///추가하면 같은 데이터 두개씩 넘어가는거 잡기
-				/// 주문금액 오류잡기
-				//remove누르면 금액 -로 내려가는거 잡기
-				// x눌러도 아래 section에 div는 안지워지는거 잡기
+				
 				if($("#je_selectbtn option:selected").val()){
 					$('.je_o_cart').empty();
-		    		alert('복붙되라ㅠㅠㅠ');
 		    		$('.divv_c').clone(true).appendTo('.je_o_cart');
-		    		
+					$('#select_btn2').empty();
+					$('#je_selectbtn').find('option').clone().appendTo('#select_btn2');
+					s_u_p.empty();
+					in_span.clone(true).appendTo(s_u_p);
 				}
-				
+				if($("#select_btn2 option:selected").val()){
+					$('.divv_c').clone(true).appendTo(je_item);
+				}
+
 				
 				t++;	
 
@@ -284,14 +294,19 @@ jieun.detail2={
 			
 			let or_pri=$('<label style="margin-top: 10px;"/>').html('주문금액');
 			let in_span=$('<span class="in_span1" style="float: right; display: inline;"/>').html('<strong id="je_won">'+sum+'</strong>원');
+			let u_price = $('<div id="u_p" style=" padding-top: 10%; width: 120%;">');
+			$('<label id="u_pp" style=" font-weight:bold; font-size:130%;">').html('주문금액').appendTo(u_price);
+			var s_u_p = $('<span class="s_u_p" style="float: right; display: inline;"/>').html('<strong id="je_won1"></strong>원');
+
 			or_pri.appendTo($('#je_temp'));
 			in_span.appendTo($('#je_temp'));
-							
+			s_u_p.appendTo(u_price);
+			u_price.appendTo(t_order_cart);
 			
-			let buttons=$('<div id="je_buttons" style="margin-top: 15px; margin-bottom:30px"/>')
-			buttons.appendTo(je_div_cover_info2);
-			$('<button id="je_get_basket"/>').html('장바구니 담기')
-			.appendTo(buttons)
+			let d_btn = $('<div id="d_btn">');
+			d_btn.appendTo(t_order_cart);
+			$('<button id="d_cart" >').html('장바구니 담기')
+			.appendTo(d_btn)
 			.click(()=>{
 				if($.type($.cookie("userid")) === 'undefined'){
 					$.getScript($.script()+'/hyeri.js', ()=>{
@@ -314,13 +329,72 @@ jieun.detail2={
 						success:c_d=>{
 							if(confirm("장바구니로 가시겠습니까 ?")){
 								jun.main.cart();
-							
+					
 							}else{
 							
 							}
-							
-							
 						}
+					})
+				}
+			});
+			
+			$('<button id="d_buy" rel="tooltip" title=" 페이지의 특성상 구매기능을 구현하지 않았습니다. " style=" text-decoration: none; "> 구매하기 </a>').appendTo(d_btn);
+			$(document).ready(function() {
+			    // html 페이지에서 'rel=tooltip'이 사용된 곳에 마우스를 가져가면 
+			    $('buttona[rel=tooltip]').mouseover(function(e) 
+			    {
+			         var tip = $(this).attr('title');         
+
+			        // 브라우져에서 제공하는 기본 툴 팁을 끈다
+			        $(this).attr('title','');
+			        
+			        // css와 연동하기 위해 html 태그를 추가해줌
+			        $(this).append('<div id="tooltip"><div class="tipBody">' 
+			                      + tip + '</div></div>');               
+			    }).mousemove(function(e) 
+			   {
+			         //마우스가 움직일 때 툴 팁이 따라 다니도록 위치값 업데이트
+			        $('#tooltip').css('top', e.pageY + 10 );
+			        $('#tooltip').css('left', e.pageX + 10 );
+			    }).mouseout(function() 
+			    {
+			        //위에서 껐던 브라우져에서 제공하는 기본 툴 팁을 복원
+			        $(this).attr('title',$('.tipBody').html());
+			        $(this).children('div#tooltip').remove();
+			    });
+			});
+										
+			
+			let buttons=$('<div id="je_buttons" style="margin-top: 15px; margin-bottom:30px"/>')
+			buttons.appendTo(je_div_cover_info2);
+			$('<button id="je_get_basket"/>').html('장바구니 담기')
+			.appendTo(buttons)
+			.click(()=>{
+				if($.type($.cookie("userid")) === 'undefined'){
+					$.getScript($.script()+'/hyeri.js', ()=>{
+						hyeri.page.l();
+		            });
+					
+				}else{
+					let i_c="";
+					let name="";
+					for(let i=1;i<t;i++){
+						name+=$('#je_num_val_'+i).val()+"/";
+						i_c+=$('#je_num_val'+i).val()+"/";
+					}	
+					$.ajax({
+						url:$.context()+"/cart/add",
+						method:'POST',
+						contentType : 'application/json',
+						data:JSON.stringify({userid:$.cookie("userid"),seq:x.seq,name:name,count:i_c}),
+						success:c_d=>{
+							
+								if(confirm("장바구니로 가시겠습니까 ?")){
+									jun.main.cart();
+								}else{
+									alret('옵션을 선택하세요.');
+								}								
+							}
 					})
 				}
 
@@ -396,17 +470,17 @@ jieun.detail2={
 			section4.appendTo(total_wrap);
 			jieun.detail2.b(section4);	
 			
-			$('<span id="topBtn">top</span>').appendTo('#content');
+			$('<span id="topBtn" class="glyphicon glyphicon-chevron-up" aria-hidden="true"><p>top</p></span>').appendTo('#content');
 			$( window ).scroll( function() {
-				if ( $( this ).scrollTop() > 200 ) {
-					$( '.top' ).fadeIn();
+				if ( $( '#topBtn' ).scrollTop() > sticky ) {
+					$( '#topBtn' ).fadeIn();
 				} else {
-					$( '.top' ).fadeOut();
+					$( '#topBtn' ).fadeOut();
 				}
 			} );
 			
-			$( '.top' ).click( function() {
-				$( 'html, body' ).animate( { scrollTop : 0 }, 400 );
+			$( '#topBtn' ).click( function() {
+				$( 'html, body' ).animate( { scrollTop : 0 }, 600 );
 				return false;
 			} );
 			

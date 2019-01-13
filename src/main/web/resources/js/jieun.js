@@ -102,7 +102,8 @@ jieun.detail2={
 			let a6 = $('<a style="color:#cc5200"/>').addClass('je_review');
 			let review = $('<span/>').addClass('je_star_review').attr({id:'je_line'});
 			let star = $('<span/>').attr({class:'glyphicon glyphicon-star','aria-hidden':true});
-				star.appendTo(a6);star.appendTo(a6);star.appendTo(a6);
+				star.appendTo(a6);
+				star.appendTo(a6);star.appendTo(a6);
 
 				a6.append(star);
 				star.appendTo(a6);
@@ -129,7 +130,7 @@ jieun.detail2={
 			});	
 	    	$('<div id="je_total_div"/>').appendTo(section2);
 			$('<div id="je_total_1" class="col-md-8" style="text-align: center;"/>').appendTo($('#je_total_div'));
-			$('<div id="je_total_2" class="col-md-4" style="margin-top: 50px; height:7500px; padding-left: 50px; padding-right: 50px;"/>').appendTo($('#je_total_div'));
+			$('<div id="je_total_2" class="col-md-4" style="margin-top: 4.5%; height:7500px; padding-left: 8%; padding-right: 1%;"/>').appendTo($('#je_total_div'));
 			
 	    	
 	    	var je_item=$('<section class="je_item" id="item_sec" style="overflow:auto; margin-top:3%; max-height:20%; background-color:whitesmoke; "/>');
@@ -152,14 +153,12 @@ jieun.detail2={
 			$('<select id="select_btn2" name="je_opt" style="font-size: 12px; width: 120%; height: 3%;"/>').appendTo(btn_span);
 			btn_span.appendTo(t_order_cart);
 			$('<option selected disabled hidden />').attr({"value":""}).html('옵션').appendTo($('#select_btn2'));
-			/*$.each(d.options,(i,j)=>{
+			$.each(d.options,(i,j)=>{
 				$('<option id="opt'+i+'"/>').attr("value",j.seq).html(j.options).appendTo($('#select_btn2'));
-			});	*/
+			});	
 			je_order_cart.appendTo(t_order_cart);
 			
 			
-			
-
 			let t=1;
 			
 			let sum=0;	
@@ -180,7 +179,7 @@ jieun.detail2={
 				$('<input/>').attr({type:'hidden',id:"je_num_val_"+t2}).val($('#je_selectbtn option:selected').val()).appendTo(amount);
 				let divv=$('<div id="item'+t2+'" class="divv_c" data-index="1" style="border-bottom: solid 1px #ededed; margin:10px; font-size: 12px;">');
 				let detail=$('<div class="detail" style="margin-top:20px">');
-				let bold_p=$('<p class="bold col-md-12" style="font-weight:bold; left: 80%; width: 20%;  bottom: 20px; padding-right: 0px;">');
+				let bold_p=$('<p class="bold col-md-12" style="font-weight:bold; left: 75%; width: 30%;  bottom: 20px;  padding-left: 0%!important;">');
 				let span_left=$('<span id="span_l" style="float:left">').html(x);
 				let no_wrap_p=$('<p style="font-size: 12px; white-space: nowrap; margin-bottom: 10px; height: 10px;">');
 				let span_am=$('<span class="amount" style="float:right"/>').html((y+"").replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원');
@@ -196,7 +195,7 @@ jieun.detail2={
 						console.log("option:"+$("#je_selectbtn option:selected").val());
 						alert('이미 선택된 옵션입니다.');
 						res= false; 
-					}				
+					}			
 /*					if($('#opt'+i).val()===$("#je_selectbtn option:selected").val()){
 						res= false;
 						console.log("$('#opt'+i).val()"+$('#opt'+i).val());
@@ -252,6 +251,135 @@ jieun.detail2={
 				});
 				
 				$('#je_plus'+t2).click(e=>{
+					e.preventDefault();	
+						je_order_cart.empty();
+						$('.divv_c').clone(true).appendTo('.je_o_cart');
+						count++;
+						$('#je_num_val'+t2).val(count);
+						sum=sum+y;
+						$('#je_won').html((sum+"").replace(/\B(?=(\d{3})+(?!\d))/g, ','));	
+						
+						
+				});
+		
+				remove.click(e=>{
+					e.preventDefault();				
+					divv.remove();		
+					if(divv.remove()){					
+						sum=sum-count*y;
+						$('#je_won').html(sum);	
+						if(sum==0){
+							$('#je_won').html('0');	
+						}						
+						}
+					$('#je_won').html((sum+"").replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+					je_order_cart.empty();
+					$('.divv_c').clone(true).appendTo('.je_o_cart');
+					$( "#je_won" ).change(function() {
+						u_price.empty();
+						$('.je_total_price').clone(true).appendTo(u_price);
+					});
+					});
+				
+				if($("#je_selectbtn option:selected").val()){
+					$('.je_o_cart').empty();
+		    		$('.divv_c').clone(true).appendTo('.je_o_cart');
+					//$('#select_btn2').empty();
+					//$('#je_selectbtn').find('option').clone().appendTo('#select_btn2');
+		    		
+					s_u_p.empty();
+					in_span.clone(true).appendTo(s_u_p);
+				}
+				
+				
+				t++;	
+
+			});
+
+			$( "#select_btn2" ).change(function() {
+				
+				let t2=t;
+				let count=1;
+				let x = $("#select_btn2 option:selected").text();				
+
+				let minus=$('<span id="je_minus'+t2+ '" class="minus glyphicon glyphicon-minus" role="button" style="margin-right: 3px;"/>');
+				let amount=$('<div class="amount"/>');
+				let plus=$('<span id="je_plus'+t2+ '" class="plus glyphicon glyphicon-plus" role="button" style="margin-left: 10px;"/>');
+				let input=$('<input id="je_num_val'+t2+'" type="number" value="1"  style=" border: 0px solid; width:30px; text-align:center; background-color:whitesmoke; " disabled/>');
+				$('<input/>').attr({type:'hidden',id:"je_num_val_"+t2}).val($('#je_selectbtn option:selected').val()).appendTo(amount);
+				let divv=$('<div id="item'+t2+'" class="divv_c" data-index="1" style="border-bottom: solid 1px #ededed; margin:10px; font-size: 12px;">');
+				let detail=$('<div class="detail" style="margin-top:20px">');
+				let bold_p=$('<p class="bold col-md-12" style="font-weight:bold; left: 80%; width: 20%;  bottom: 20px; padding-right: 0%; padding-left: 0%!important;">');
+				let span_left=$('<span id="span_l" style="float:left">').html(x);
+				let no_wrap_p=$('<p style="font-size: 12px; white-space: nowrap; margin-bottom: 10px; height: 10px;">');
+				let span_am=$('<span class="amount" style="float:right"/>').html((y+"").replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원');
+				let remove = $('<span class="remove glyphicon glyphicon-remove" role="button" aria-hidden="false" style="float: right; right: 10px;">');
+				let br=$('<br>');
+
+
+				let res = true;
+				for(let i =1; i<=t; i++){
+					if($.cookie("opt"+i)===$("#select_btn2 option:selected").val()){
+						console.log('$.cookie("opt"+i)'+$.cookie("opt"+i));
+						console.log("option:"+$("#select_btn2 option:selected").val());
+						alert('이미 선택된 옵션입니다.');
+						res= false; 
+					}		
+					/*if($('#opt'+i).val()===$("#je_selectbtn option:selected").val()){
+						res= false;
+						console.log("$('#opt'+i).val()"+$('#opt'+i).val());
+						console.log("option:"+$("#je_selectbtn option:selected").val());
+						
+						alert('이미 선택된 옵션입니다.');
+					}*/
+				}
+				if(res){
+					
+					$.cookie("opt"+t,$("#select_btn2 option:selected").val());
+					span_left.appendTo(no_wrap_p);
+					remove.appendTo(no_wrap_p);
+					no_wrap_p.append(br);
+					
+					minus.appendTo(amount);	
+					input.appendTo(amount);							
+					plus.appendTo(amount);					
+					amount.appendTo(detail);					
+					span_am.appendTo(bold_p);
+					bold_p.appendTo(detail);
+					
+					no_wrap_p.appendTo(divv);
+					detail.appendTo(divv);
+					divv.appendTo(je_item);
+					
+					divv.append(br);
+					sum=sum+y;
+					$('#je_won').html((sum+"").replace(/\B(?=(\d{3})+(?!\d))/g, ','));	
+					
+					
+				}
+
+			
+				$(this).click(e=>{
+					e.preventDefault();		
+					je_order_cart.show();
+					$('#je_won').html((sum+"").replace(/\B(?=(\d{3})+(?!\d))/g, ','));	
+					});
+				
+				
+				
+				$('#je_minus'+t2).click(e=>{
+					e.preventDefault();
+					
+					if(count>1){
+						count--;
+						$('#je_num_val'+t2).val(count);							
+						sum=sum-y;
+						$('#je_won').html((sum+"").replace(/\B(?=(\d{3})+(?!\d))/g, ','));	
+						}
+					
+				});
+				
+				$('#je_plus'+t2).click(e=>{
 					e.preventDefault();				
 						count++;
 						$('#je_num_val'+t2).val(count);
@@ -271,26 +399,21 @@ jieun.detail2={
 							$('#je_won').html('0');	
 						}
 						}
-					
+					$('.divv_c').remove();
+					$('.divv_c').appendTo('.je_item');
 					});
 				
-				if($("#je_selectbtn option:selected").val()){
+				if($("#select_btn2 option:selected").val()){
 					$('.je_o_cart').empty();
 		    		$('.divv_c').clone(true).appendTo('.je_o_cart');
-					$('#select_btn2').empty();
-					$('#je_selectbtn').find('option').clone().appendTo('#select_btn2');
 					s_u_p.empty();
 					in_span.clone(true).appendTo(s_u_p);
-				}
-				if($("#select_btn2 option:selected").val()){
-					$('.divv_c').clone(true).appendTo(je_item);
-				}
 
+				}
 				
 				t++;	
-
+			
 			});
-
 			
 			let or_pri=$('<label style="margin-top: 10px;"/>').html('주문금액');
 			let in_span=$('<span class="in_span1" style="float: right; display: inline;"/>').html('<strong id="je_won">'+sum+'</strong>원');
@@ -487,134 +610,9 @@ jieun.detail2={
 		});
 		
 	},
-/*	a:x=>{		
-		$.getJSON($.context()+'/BrdDetail/detail/'+x.seq,d=>{
-			let t_order_cart=$('<section class="col-md-10" id="t_order_cart" style="left: 18%; width: 90%; top: 20%; position:sticky; height: 20%;"/>');
-			let je_order_cart=$('<section id="je_order_cart" style="width: 120%; height: 20%; background-color: whitesmoke; margin-top: 15%; overflow-y:auto; max-height: 50%;"/>');
-			let btn_span=$('<span id="btn_span">');
-			let je_hdiv=  $('<div id="je_hdiv" style="padding-bottom: 20px;"/>');
-			t_order_cart.appendTo($('#je_total_2'));
-			$('<h style="font-weight:bold" id="je_h" style="padding-bottom:20px;">').text("옵션선택").appendTo(je_hdiv);
-			je_hdiv.appendTo(t_order_cart);
-			$('<select id="select_btn2" name="je_opt" style="font-size: 12px; width: 120%; height: 3%;"/>').appendTo(btn_span);
-			btn_span.appendTo(t_order_cart);
-			$('<option selected disabled hidden />').attr({"value":""}).html('옵션').appendTo($('#select_btn2'));
-	    	$.each(d.options,(i,j)=>{
-				$('<option id="opt1"/>').attr("value",j.seq).html(j.options).appendTo($('#select_btn2'));
-			});	
-			je_order_cart.appendTo(t_order_cart);
-			
-			/////input 박스 
-			let sum_p=(Math.round(d.sum/100))*100;
-			let ins = $('<ins/>').addClass('je_dis_cost').text((sum_p+"").replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원');
-
-			let t=1;
-			
-			let sum1=0;	
-			let y=sum_p;
-			
-			let u_price = $('<div id="u_p" style=" padding-top: 10%; width: 120%;">');
-			$('<label id="u_pp" style=" font-weight:bold; font-size:130%;">').html('주문금액').appendTo(u_price);
-			var s_u_p = $('<span class="s_u_p" style="float: right; display: inline;"/>').html('<strong id="je_won1">'+sum1+'</strong>원');
-			$('#select_btn2').change(function(){
-					
-				
-				let t2=t;
-				let count=1;
-				let x = $("#select_btn2 option:selected").text();				
-
-				sum1=sum1+y;
-				$('#je_won').html((sum1+"").replace(/\B(?=(\d{3})+(?!\d))/g, ','));	
-				
-				
-/////
-				let minus=$('<span id="je_minus'+t2+ '" class="minus glyphicon glyphicon-minus" role="button" style="margin-right: 3px;"/>');
-				let amount=$('<div class="amount"/>');
-				let plus=$('<span id="je_plus'+t2+ '" class="plus glyphicon glyphicon-plus" role="button" style="margin-left: 10px;"/>');
-				$('<input/>').attr({type:'hidden',id:"je_num_val_"+t2}).val($('#select_btn2 option:selected').val()).appendTo(je_order_cart);
-				let input=$('<input id="je_num_val'+t2+'" type="number" value="1"  style=" border: 0px solid; width:30px; text-align:center;background-color:whitesmoke;"/>');
-				let divv=$('<div id="item'+t2+'" class="divv_c" data-index="1" style="border-bottom: solid 1px #ededed; margin:10px; font-size: 12px;">');
-				let detail=$('<div class="detail" style="margin-top:10%;">');
-				let bold_p=$('<p class="bold col-md-12" style="font-weight:bold; left: 80%; width: 20%;  bottom: 20px; padding-right: 0%;">');
-				let span_left=$('<span id="span_l" style="float:left; padding-top: 2%;">').html(x);
-				let no_wrap_p=$('<p style="font-size: 12px; white-space: nowrap; margin-bottom: 10px; height: 20%;">');
-				let span_am=$('<span class="amount" style="float:right"/>').html((y+"").replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원');
-				let remove = $('<span class="remove glyphicon glyphicon-remove" role="button" aria-hidden="false" style="float: right; right: 2%; padding-top: 2%;">');
-				let br=$('<br>');
-				
-				
-				span_left.appendTo(no_wrap_p);
-				remove.appendTo(no_wrap_p);
-				no_wrap_p.append(br);
-				
-				minus.appendTo(amount);
-				input.appendTo(amount);
-				plus.appendTo(amount);					
-				amount.appendTo(detail);					
-				span_am.appendTo(bold_p);
-				bold_p.appendTo(detail);
-				
-				no_wrap_p.appendTo(divv);
-				detail.appendTo(divv);
-				divv.appendTo(je_order_cart);
-				$('#je_won1').html((sum1+"").replace(/\B(?=(\d{3})+(?!\d))/g, ','));	
-				divv.append(br);
-			
-				$(this).click(e=>{
-					e.preventDefault();						
-					je_order_cart.show();
-					$('#je_won1').html((sum1+"").replace(/\B(?=(\d{3})+(?!\d))/g, ','));	
-					});
-				
-				
-				
-				$('#je_minus'+t2).click(e=>{
-					e.preventDefault();
-					
-					if(count>1){
-						count--;
-						$('#je_num_val'+t2).val(count);							
-						sum1=sum1-y;
-						$('#je_won1').html((sum1+"").replace(/\B(?=(\d{3})+(?!\d))/g, ','));	
-						}
-					
-				});
-				
-				$('#je_plus'+t2).click(e=>{
-					e.preventDefault();				
-						count++;
-						$('#je_num_val'+t2).val(count);
-						sum1=sum1+y;
-						$('#je_won1').html((sum1+"").replace(/\B(?=(\d{3})+(?!\d))/g, ','));	
-						
-						
-				});
+	a:x=>{
 		
-				
-				$('#je_won').html(sum1);	
-
-				remove.click(e=>{
-					e.preventDefault();				
-					divv.remove();		
-					if(divv.remove()){					
-						sum1=sum1-count*y;
-						$('#je_won1').html((sum1+"").replace(/\B(?=(\d{3})+(?!\d))/g, ','));	
-						}
-					});
-				
-				t++;	
-
-
-				
-				
-			});
-			s_u_p.appendTo(u_price);
-			u_price.appendTo(t_order_cart);
-
-
-		});
-			
-	},*/
+	},
 	b:d=>{
 		
 		// shipping
